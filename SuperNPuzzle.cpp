@@ -184,9 +184,9 @@ string SuperNPuzzle::depth_first_search() {
         next_state.actions += act;
 
         if (traveled_states.find(next_state.state) == traveled_states.end() &&
-            std::find_if(unexplored.begin(), unexplored.end(),
-                         [&](const SuperState &state) { return state.state == next_state.state; }) ==
-            unexplored.end()) {
+        std::find_if(unexplored.begin(), unexplored.end(), [&](const SuperState &state) {
+          return state.state == next_state.state;
+        }) == unexplored.end()) {
           unexplored.push_back(next_state);
         } // if end
       } // if end
@@ -257,9 +257,9 @@ string SuperNPuzzle::breadth_first_search() {
         next_state.actions += act;
 
         if (traveled_states.find(next_state.state) == traveled_states.end() &&
-            std::find_if(unexplored.begin(), unexplored.end(),
-                         [&](const SuperState &state) { return state.state == next_state.state; }) ==
-            unexplored.end()) {
+        find_if(unexplored.begin(), unexplored.end(), [&](const SuperState &state) {
+          return state.state == next_state.state;
+        }) == unexplored.end()) {
           unexplored.push_back(next_state);
         } // if end
       } // if end
