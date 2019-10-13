@@ -124,23 +124,25 @@ void SuperNPuzzle::display() {
 
 string SuperNPuzzle::depth_first_search() {
   // Create containers
-  deque<vector<int>> unexplored;
+  deque<SuperState> unexplored;
   set<vector<int>> traveled_states;
 
   // Push initial state to stack
-  unexplored.push_back(_initState);
+  SuperState initState;
+  initState.state = _initState;
+  unexplored.push_back(initState);
 
   while (!unexplored.empty()) {
     auto current_state = unexplored.back();
-    traveled_states.insert(current_state);
+    traveled_states.insert(current_state.state);
     unexplored.pop_back();
 
-    if (current_state == _goalState)
-      return "Success";
+    if (current_state.state == _goalState)
+      return current_state.actions;
 
     int bLoc = 0;
-    for (unsigned long i = 0; i < current_state.size(); i++) {
-      if (current_state[i] == 0) {
+    for (unsigned long i = 0; i < current_state.state.size(); i++) {
+      if (current_state.state[i] == 0) {
         bLoc = static_cast<int>(i);
         break;
       }
@@ -176,11 +178,12 @@ string SuperNPuzzle::depth_first_search() {
 
       }
       if (toSwap != -1) {
-        vector<int> next_state = current_state;
-        next_state[bLoc] = next_state[toSwap];
-        next_state[toSwap] = 0;
+        SuperState next_state = current_state;
+        next_state.state[bLoc] = next_state.state[toSwap];
+        next_state.state[toSwap] = 0;
+        next_state.actions += act;
 
-        if (traveled_states.find(next_state) == traveled_states.end() &&
+        if (traveled_states.find(next_state.state) == traveled_states.end() &&
         std::find(unexplored.begin(), unexplored.end(), next_state) == unexplored.end()) {
           unexplored.push_back(next_state);
         } // if end
@@ -192,23 +195,25 @@ string SuperNPuzzle::depth_first_search() {
 
 string SuperNPuzzle::breadth_first_search() {
   // Create containers
-  deque<vector<int>> unexplored;
+  deque<SuperState> unexplored;
   set<vector<int>> traveled_states;
 
   // Push initial state to queue
-  unexplored.push_back(_initState);
+  SuperState initState;
+  initState.state = _initState;
+  unexplored.push_back(initState);
 
   while (!unexplored.empty()) {
     auto current_state = unexplored.front();
-    traveled_states.insert(current_state);
+    traveled_states.insert(current_state.state);
     unexplored.pop_front();
 
-    if (current_state == _goalState)
-      return "Success";
+    if (current_state.state == _goalState)
+      return current_state.actions;
 
     int bLoc = 0;
-    for (unsigned long i = 0; i < current_state.size(); i++) {
-      if (current_state[i] == 0) {
+    for (unsigned long i = 0; i < current_state.state.size(); i++) {
+      if (current_state.state[i] == 0) {
         bLoc = static_cast<int>(i);
         break;
       }
@@ -244,11 +249,12 @@ string SuperNPuzzle::breadth_first_search() {
 
       }
       if (toSwap != -1) {
-        vector<int> next_state = current_state;
-        next_state[bLoc] = next_state[toSwap];
-        next_state[toSwap] = 0;
+        SuperState next_state = current_state;
+        next_state.state[bLoc] = next_state.state[toSwap];
+        next_state.state[toSwap] = 0;
+        next_state.actions += act;
 
-        if (traveled_states.find(next_state) == traveled_states.end() &&
+        if (traveled_states.find(next_state.state) == traveled_states.end() &&
             std::find(unexplored.begin(), unexplored.end(), next_state) == unexplored.end()) {
           unexplored.push_back(next_state);
         } // if end

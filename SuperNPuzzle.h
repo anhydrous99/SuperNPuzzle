@@ -19,6 +19,10 @@ class SuperNPuzzle {
   void randInitState();
   static int stateDis(const std::vector<int> &pState1, const std::vector<int> &pState2);
 
+  struct SuperState {
+    std::string actions;
+    std::vector<int> state;
+  };
 public:
   explicit SuperNPuzzle(int n = 8);
   explicit SuperNPuzzle(const std::vector<int> &initState);
