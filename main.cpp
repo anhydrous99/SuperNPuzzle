@@ -29,6 +29,15 @@ int main() {
   auto end = hrc::now();
   // Show how much memory is being used and how long it took
   cout << "Current memory usage: " << mem_usage / 1000 << " KB and it took "
-       << duration_cast<microseconds>(end - start).count() << " microseconds to get\n";
+       << duration_cast<microseconds>(end - start).count() << " microseconds\n";
+
+  unsigned long steps;
+  unsigned long max_mem;
+  std::string actions;
+
+  start = hrc::now();
+  actions = puzzle1.Astar_search(steps, max_mem, 1000, 100);
+  end = hrc::now();
+  auto puzzle1_dur = end - start;
   return 0;
 }

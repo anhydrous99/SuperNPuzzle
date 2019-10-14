@@ -124,14 +124,13 @@ void SuperNPuzzle::display() {
   display(_initState);
 }
 
-void SuperNPuzzle::display_stats(const SuperNPuzzle::SuperState &pState, unsigned long long steps) {
+void SuperNPuzzle::display_stats(const SuperNPuzzle::SuperState &pState, size_t mem, unsigned long steps) {
   cout << "Step: " << steps << endl;
-  cout << "Memory usage: " << getCurrentRSS() / 1000 << " KB\n";
-  cout << "Current actions: " << pState.actions << endl;
+  cout << "Max memory usage: " << mem / 1000 << " KB\n";
   display(pState.state);
 }
 
-string SuperNPuzzle::depth_first_search(unsigned long long &steps, int stats_interval) {
+string SuperNPuzzle::depth_first_search(unsigned long &steps, size_t &mem, int stats_interval, unsigned long step_limit) {
   // Create containers
   deque<SuperState> unexplored;
   set<vector<int>> traveled_states;
@@ -140,9 +139,10 @@ string SuperNPuzzle::depth_first_search(unsigned long long &steps, int stats_int
   SuperState initState;
   initState.state = _initState;
   unexplored.push_back(initState);
+  mem = 0;
   steps = 0;
 
-  while (!unexplored.empty()) {
+  while (!unexplored.empty() && steps < step_limit) {
     auto current_state = unexplored.back();
     traveled_states.insert(current_state.state);
     unexplored.pop_back();
@@ -158,8 +158,12 @@ string SuperNPuzzle::depth_first_search(unsigned long long &steps, int stats_int
       }
     }
 
-    if (steps % stats_interval == 0)
-      display_stats(current_state, steps);
+    size_t current_mem = getCurrentRSS();
+    if (mem < current_mem)
+      mem = current_mem;
+
+    if (steps % stats_interval == 0 && stats_interval != 0)
+      display_stats(current_state, mem, steps);
 
     for (const char act : AVAILABLE_ACTIONS) {
       int toSwap = -1;
@@ -209,7 +213,7 @@ string SuperNPuzzle::depth_first_search(unsigned long long &steps, int stats_int
   return "!";
 } // function end
 
-string SuperNPuzzle::breadth_first_search(unsigned long long &steps, int stats_interval) {
+string SuperNPuzzle::breadth_first_search(unsigned long &steps, size_t &mem, int stats_interval, unsigned long step_limit) {
   // Create containers
   deque<SuperState> unexplored;
   set<vector<int>> traveled_states;
@@ -218,9 +222,10 @@ string SuperNPuzzle::breadth_first_search(unsigned long long &steps, int stats_i
   SuperState initState;
   initState.state = _initState;
   unexplored.push_back(initState);
+  mem = 0;
   steps = 0;
 
-  while (!unexplored.empty()) {
+  while (!unexplored.empty() && steps < step_limit) {
     auto current_state = unexplored.front();
     traveled_states.insert(current_state.state);
     unexplored.pop_front();
@@ -236,8 +241,12 @@ string SuperNPuzzle::breadth_first_search(unsigned long long &steps, int stats_i
       }
     }
 
-    if (steps % stats_interval == 0)
-      display_stats(current_state, steps);
+    size_t current_mem = getCurrentRSS();
+    if (mem < current_mem)
+      mem = current_mem;
+
+    if (steps % stats_interval == 0 && stats_interval != 0)
+      display_stats(current_state, mem, steps);
 
     for (const char act : AVAILABLE_ACTIONS) {
       int toSwap = -1;
@@ -287,7 +296,7 @@ string SuperNPuzzle::breadth_first_search(unsigned long long &steps, int stats_i
   return "!";
 } // function end
 
-string SuperNPuzzle::Astar_search(unsigned long long &steps, int stats_interval) {
+string SuperNPuzzle::Astar_search(unsigned long &steps, size_t &mem, int stats_interval, unsigned long step_limit) {
   // Create heuristic `f` to embed in our priority_queue
   auto cmp = [&](const SuperState &state1, const SuperState &state2) {
     return stateDis(state1.state, _goalState) > stateDis(state2.state, _goalState);
@@ -301,9 +310,10 @@ string SuperNPuzzle::Astar_search(unsigned long long &steps, int stats_interval)
   SuperState initState;
   initState.state = _initState;
   unexplored.push(initState);
+  mem = 0;
   steps = 0;
 
-  while(!unexplored.empty()) {
+  while(!unexplored.empty() && steps < step_limit) {
     auto current_state = unexplored.top();
     traveled_states.insert(current_state.state);
     unexplored.pop();
@@ -319,8 +329,12 @@ string SuperNPuzzle::Astar_search(unsigned long long &steps, int stats_interval)
       }
     }
 
-    if (steps % stats_interval == 0)
-      display_stats(current_state, steps);
+    size_t current_mem = getCurrentRSS();
+    if (mem < current_mem)
+      mem = current_mem;
+
+    if (steps % stats_interval == 0 && stats_interval != 0)
+      display_stats(current_state, mem, steps);
 
     for (const char act : AVAILABLE_ACTIONS) {
       int toSwap = -1;

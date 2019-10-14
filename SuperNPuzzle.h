@@ -15,7 +15,7 @@ class SuperNPuzzle {
     std::vector<int> state;
   };
 
-  const std::string AVAILABLE_ACTIONS = "";
+  const std::string AVAILABLE_ACTIONS = "RLDU";
   std::vector<int> _goalState;
   std::vector<int> _initState;
   int _steps = 0;
@@ -23,18 +23,18 @@ class SuperNPuzzle {
 
   void randInitState();
   static int stateDis(const std::vector<int> &pState1, const std::vector<int> &pState2);
-  inline void display_stats(const SuperState &state, unsigned long long steps);
+  inline void display_stats(const SuperState &state, size_t mem, unsigned long steps);
 public:
   explicit SuperNPuzzle(int n = 8);
   explicit SuperNPuzzle(const std::vector<int> &initState);
 
-  std::string depth_first_search(unsigned long long &steps, int mem_interval = 0);
-  std::string breadth_first_search(unsigned long long &steps, int mem_interal = 0);
-  std::string Astar_search(unsigned long long &steps, int mem_interval = 0);
+  std::string depth_first_search(unsigned long &steps, size_t &mem, int stats_interval, unsigned long step_limit);
+  std::string breadth_first_search(unsigned long &steps, size_t &mem, int stats_interal, unsigned long step_limit);
+  std::string Astar_search(unsigned long &steps, size_t &mem, int stats_interval, unsigned long step_limit);
 
   void reset(const std::vector<int> &initState);
-  void display(const std::vector<int> &pState);
-  void display();
+  inline void display(const std::vector<int> &pState);
+  inline void display();
 };
 
 #endif //SUPERNPUZZLE_SUPERNPUZZLE_H
