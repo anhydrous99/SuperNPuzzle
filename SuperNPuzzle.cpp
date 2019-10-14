@@ -3,6 +3,7 @@
 //
 
 #include "SuperNPuzzle.h"
+#include "super_queue.h"
 
 #include <iostream>
 #include <algorithm>
@@ -267,3 +268,80 @@ string SuperNPuzzle::breadth_first_search() {
   } // while end
   return "!";
 } // function end
+
+string SuperNPuzzle::Astar_search() {
+  // Create heuristic `f` to embed in our priority_queue
+  auto cmp = [&](const SuperState &state1, const SuperState &state2) {
+    return stateDis(state1.state, _goalState) > stateDis(state2.state, _goalState);
+  };
+
+  // Create containers
+  super_queue<SuperState, vector<SuperState>, decltype(cmp)> unexplored(cmp);
+  set<vector<int>> traveled_states;
+
+  // Push initial state to queue
+  SuperState initState;
+  initState.state = _initState;
+  unexplored.push(initState);
+
+  while(!unexplored.empty()) {
+    auto current_state = unexplored.top();
+    traveled_states.insert(current_state.state);
+    unexplored.pop();
+
+    if (current_state.state == _goalState)
+      return current_state.actions;
+
+    int bLoc = 0;
+    for (unsigned long i = 0; i < current_state.state.size(); i++) {
+      if (current_state.state[i] == 0) {
+        bLoc = static_cast<int>(i);
+        break;
+      }
+    }
+
+    for (const char act : AVAILABLE_ACTIONS) {
+      int toSwap = -1;
+      switch (act) {
+
+        case 'L':
+          if (bLoc % _m != 0)
+            toSwap = bLoc - 1;
+          break;
+
+        case 'R':
+          if (bLoc % _m != _m - 1)
+            toSwap = bLoc + 1;
+          break;
+
+        case 'U':
+          if (bLoc / _m != 0)
+            toSwap = bLoc - _m;
+          break;
+
+        case 'D':
+          if (bLoc / _m != _m - 1)
+            toSwap = bLoc + _m;
+          break;
+
+        default:
+          cout << "Invalid action.\n";
+          return "!";
+      }
+      if (toSwap != -1) {
+        SuperState next_state = current_state;
+        next_state.state[bLoc] = next_state.state[toSwap];
+        next_state.state[toSwap] = 0;
+        next_state.actions += act;
+
+        if (traveled_states.find(next_state.state) == traveled_states.end() &&
+        unexplored.find([&](const SuperState &state) {
+          return state.state == next_state.state;
+        }) == unexplored.end()) {
+          unexplored.push(next_state);
+        }
+      }
+    }
+  }
+  return "!";
+}

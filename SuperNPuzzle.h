@@ -29,6 +29,7 @@ public:
 
   std::string depth_first_search();
   std::string breadth_first_search();
+  std::string Astar_search();
 
   void reset(const std::vector<int> &initState);
   void display(const std::vector<int> &pState);
