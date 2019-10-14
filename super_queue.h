@@ -17,7 +17,7 @@ public:
   using std::priority_queue<T, Container, Compare>::priority_queue;
 
   template<typename UnaryPredicate>
-  const_iterator find(UnaryPredicate p) {
+  const_iterator find(UnaryPredicate p) const {
     auto first = this->c.cbegin();
     auto last = this->c.cend();
     for (; first != last; ++first) {
@@ -27,11 +27,11 @@ public:
     return last;
   }
 
-  const_iterator begin() {
+  const_iterator begin() const {
     return this->c.cbegin();
   }
 
-  const_iterator end() {
+  const_iterator end() const {
     return this->c.cend();
   }
 };

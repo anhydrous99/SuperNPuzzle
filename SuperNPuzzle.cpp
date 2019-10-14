@@ -339,9 +339,9 @@ string SuperNPuzzle::Astar_search() {
           return state.state == next_state.state;
         }) == unexplored.end()) {
           unexplored.push(next_state);
-        }
-      }
-    }
-  }
+        } // end if
+      } // end if
+    } // end for
+  } // end while
   return "!";
-}
+} // end function
