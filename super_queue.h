@@ -1,5 +1,8 @@
 //
 // Created by aherrera on 10/13/19.
+// The priority_queue class is missing search functionality with find, I added that by creating a class that
+//  inherits priority_queue, exposes the internal iterators, and created a search function that uses the
+//  internal iterators.
 //
 
 #ifndef SUPERNPUZZLE_SUPER_QUEUE_H
@@ -7,7 +10,7 @@
 
 #include <queue>
 
-template<typename T, typename Container = std::vector<T>, typename Compare = std::less<typename Container::value_type>>
+template<typename T, typename Container, typename Compare>
 class super_queue : public std::priority_queue<T, Container, Compare> {
 public:
   typedef typename std::priority_queue<T, Container, Compare>::container_type::const_iterator const_iterator;
