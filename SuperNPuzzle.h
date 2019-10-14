@@ -10,6 +10,11 @@
 
 
 class SuperNPuzzle {
+  struct SuperState {
+    std::string actions;
+    std::vector<int> state;
+  };
+
   const std::string AVAILABLE_ACTIONS = "";
   std::vector<int> _goalState;
   std::vector<int> _initState;
@@ -18,18 +23,14 @@ class SuperNPuzzle {
 
   void randInitState();
   static int stateDis(const std::vector<int> &pState1, const std::vector<int> &pState2);
-
-  struct SuperState {
-    std::string actions;
-    std::vector<int> state;
-  };
+  inline void display_stats(const SuperState &state, unsigned long long steps);
 public:
   explicit SuperNPuzzle(int n = 8);
   explicit SuperNPuzzle(const std::vector<int> &initState);
 
-  std::string depth_first_search();
-  std::string breadth_first_search();
-  std::string Astar_search();
+  std::string depth_first_search(unsigned long long &steps, int mem_interval = 0);
+  std::string breadth_first_search(unsigned long long &steps, int mem_interal = 0);
+  std::string Astar_search(unsigned long long &steps, int mem_interval = 0);
 
   void reset(const std::vector<int> &initState);
   void display(const std::vector<int> &pState);

@@ -4,6 +4,7 @@
 
 #include "SuperNPuzzle.h"
 #include "super_queue.h"
+#include "extern/memory_usage.h"
 
 #include <iostream>
 #include <algorithm>
@@ -123,7 +124,14 @@ void SuperNPuzzle::display() {
   display(_initState);
 }
 
-string SuperNPuzzle::depth_first_search() {
+void SuperNPuzzle::display_stats(const SuperNPuzzle::SuperState &pState, unsigned long long steps) {
+  cout << "Step: " << steps << endl;
+  cout << "Memory usage: " << getCurrentRSS() / 1000 << " KB\n";
+  cout << "Current actions: " << pState.actions << endl;
+  display(pState.state);
+}
+
+string SuperNPuzzle::depth_first_search(unsigned long long &steps, int stats_interval) {
   // Create containers
   deque<SuperState> unexplored;
   set<vector<int>> traveled_states;
@@ -132,6 +140,7 @@ string SuperNPuzzle::depth_first_search() {
   SuperState initState;
   initState.state = _initState;
   unexplored.push_back(initState);
+  steps = 0;
 
   while (!unexplored.empty()) {
     auto current_state = unexplored.back();
@@ -148,6 +157,9 @@ string SuperNPuzzle::depth_first_search() {
         break;
       }
     }
+
+    if (steps % stats_interval == 0)
+      display_stats(current_state, steps);
 
     for (const char act : AVAILABLE_ACTIONS) {
       int toSwap = -1;
@@ -192,11 +204,12 @@ string SuperNPuzzle::depth_first_search() {
         } // if end
       } // if end
     } // for end
+    steps++;
   } // while end
   return "!";
 } // function end
 
-string SuperNPuzzle::breadth_first_search() {
+string SuperNPuzzle::breadth_first_search(unsigned long long &steps, int stats_interval) {
   // Create containers
   deque<SuperState> unexplored;
   set<vector<int>> traveled_states;
@@ -205,6 +218,7 @@ string SuperNPuzzle::breadth_first_search() {
   SuperState initState;
   initState.state = _initState;
   unexplored.push_back(initState);
+  steps = 0;
 
   while (!unexplored.empty()) {
     auto current_state = unexplored.front();
@@ -221,6 +235,9 @@ string SuperNPuzzle::breadth_first_search() {
         break;
       }
     }
+
+    if (steps % stats_interval == 0)
+      display_stats(current_state, steps);
 
     for (const char act : AVAILABLE_ACTIONS) {
       int toSwap = -1;
@@ -265,11 +282,12 @@ string SuperNPuzzle::breadth_first_search() {
         } // if end
       } // if end
     } // for end
+    steps++;
   } // while end
   return "!";
 } // function end
 
-string SuperNPuzzle::Astar_search() {
+string SuperNPuzzle::Astar_search(unsigned long long &steps, int stats_interval) {
   // Create heuristic `f` to embed in our priority_queue
   auto cmp = [&](const SuperState &state1, const SuperState &state2) {
     return stateDis(state1.state, _goalState) > stateDis(state2.state, _goalState);
@@ -283,6 +301,7 @@ string SuperNPuzzle::Astar_search() {
   SuperState initState;
   initState.state = _initState;
   unexplored.push(initState);
+  steps = 0;
 
   while(!unexplored.empty()) {
     auto current_state = unexplored.top();
@@ -299,6 +318,9 @@ string SuperNPuzzle::Astar_search() {
         break;
       }
     }
+
+    if (steps % stats_interval == 0)
+      display_stats(current_state, steps);
 
     for (const char act : AVAILABLE_ACTIONS) {
       int toSwap = -1;
@@ -342,6 +364,7 @@ string SuperNPuzzle::Astar_search() {
         } // end if
       } // end if
     } // end for
+    steps++;
   } // end while
   return "!";
 } // end function
