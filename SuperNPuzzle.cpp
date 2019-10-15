@@ -128,6 +128,7 @@ void SuperNPuzzle::display_stats(const SuperNPuzzle::SuperState &pState, size_t 
   cout << "Step: " << steps << endl;
   cout << "Max memory usage: " << mem / 1000 << " KB\n";
   display(pState.state);
+  cout << endl;
 }
 
 string SuperNPuzzle::depth_first_search(unsigned long &steps, size_t &mem, int stats_interval, unsigned long step_limit) {
