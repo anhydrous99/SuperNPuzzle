@@ -1,5 +1,5 @@
 //
-// Created by aherrera on 10/13/19.
+// Created by Armando Herrera (ID: 20217690) on 10/13/19.
 // The priority_queue class is missing search functionality with find, I added that by creating a class that
 //  inherits priority_queue, exposes the internal iterators, and created a search function that uses the
 //  internal iterators.

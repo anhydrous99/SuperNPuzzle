@@ -1,5 +1,5 @@
 //
-// Created by aherrera on 10/12/19.
+// Created by Armando Herrera (ID: 20217690) on 10/12/19.
 //
 
 #ifndef SUPERNPUZZLE_SUPERNPUZZLE_H
